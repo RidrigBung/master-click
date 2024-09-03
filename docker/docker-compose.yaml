@@ -1,0 +1,115 @@
+# version: '3.8'
+services:
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    networks:
+      - ch_replicated
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOOKEEPER_CLIENT_PORT=2181
+    ports:
+      - "2182:2181"
+      - "2888:2888"
+      - "3888:3888"
+      
+  click-master:
+    image: yandex/clickhouse-server
+    container_name: click-master
+    ports:
+      - '8000:8123'
+      - '9000:9000'
+    environment:
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=default
+    volumes:
+      - ${storage_path}/ch_data_master:/var/lib/clickhouse/
+      - ${storage_path}/ch_logs_master:/var/log/clickhouse-server/
+      - ${storage_path}/config_master.xml:/etc/clickhouse-server/config.xml
+    networks:
+      - ch_network
+    depends_on:
+      - zookeeper
+      
+  click-keeper:
+    image: yandex/clickhouse-server
+    container_name: click-keeper
+    ports:
+      - '8001:8123'
+      - '9001:9000'
+    environment:
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=default
+    volumes:
+      - ${storage_path}/ch_data_keeper:/var/lib/clickhouse/
+      - ${storage_path}/ch_logs_keeper:/var/log/clickhouse-server/
+      - ${storage_path}/config_keeper.xml:/etc/clickhouse-server/config.xml
+    networks:
+      - ch_network
+    depends_on:
+      - zookeeper
+      
+  click-node-01:
+    image: yandex/clickhouse-server
+    container_name: click-node-01
+    ports:
+      - '8002:8123'
+      - '9002:9000'
+    environment:
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=default
+    volumes:
+      - ${storage_path}/ch_data_node-01:/var/lib/clickhouse/
+      - ${storage_path}/ch_logs_node-01:/var/log/clickhouse-server/
+      - ${storage_path}/config_node-01.xml:/etc/clickhouse-server/config.xml
+    networks:
+      - ch_network
+    depends_on:
+      - zookeeper
+      
+  click-node-02:
+    image: yandex/clickhouse-server
+    container_name: click-node-02
+    ports:
+      - '8003:8123'
+      - '9003:9000'
+    environment:
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=default
+    volumes:
+      - ${storage_path}/ch_data_node-02:/var/lib/clickhouse/
+      - ${storage_path}/ch_logs_node-02:/var/log/clickhouse-server/
+      - ${storage_path}/config_node-02.xml:/etc/clickhouse-server/config.xml
+    networks:
+      - ch_network
+    depends_on:
+      - zookeeper
+
+volumes:
+  ${storage_path}/ch_data_master:
+    name: "click-master_data"
+  ${storage_path}/ch_logs_master:
+    name: "click-master_logs"
+  ${storage_path}/config_master.xml:
+    name: "click-master_config"
+  ${storage_path}/ch_data_keeper:
+    name: "keeper_data"
+  ${storage_path}/ch_logs_keeper:
+    name: "keeper_logs"
+  ${storage_path}/config_keeper.xml:
+    name: "keeper_config"
+  ${storage_path}/ch_data_node_01:
+    name: "node-01_data"
+  ${storage_path}/ch_logs_node_01:
+    name: "node-01_logs"
+  ${storage_path}/config_node_01.xml:
+    name: "node-01_config"
+  ${storage_path}/ch_data_node_02:
+    name: "node-02_data"
+  ${storage_path}/ch_logs_node_02:
+    name: "node-02_logs"
+  ${storage_path}/config_node_02.xml:
+    name: "node-02_config"
+
+networks:
+  ch_network:
+    driver: bridge
