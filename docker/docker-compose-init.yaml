@@ -7,8 +7,9 @@ services:
     ports:
       - '8000:8123'
       - '9000:9000'
-    volumes:
-      - ${storage_path}/clickhouse_node_01:/etc/clickhouse-server/config.d
+    environment:
+      - CLICKHOUSE_USER=admin
+      - CLICKHOUSE_PASSWORD=node1
     networks:
       - ch_network
       
@@ -19,8 +20,9 @@ services:
     ports:
       - '8001:8123'
       - '9001:9000'
-    volumes:
-      - ${storage_path}/clickhouse_node_02:/etc/clickhouse-server/config.d
+    environment:
+      - CLICKHOUSE_USER=admin
+      - CLICKHOUSE_PASSWORD=node2
     networks:
       - ch_network
       
@@ -31,8 +33,9 @@ services:
     ports:
       - '8002:8123'
       - '9002:9000'
-    volumes:
-      - ${storage_path}/clickhouse_node_03:/etc/clickhouse-server/config.d
+    environment:
+      - CLICKHOUSE_USER=admin
+      - CLICKHOUSE_PASSWORD=node3
     networks:
       - ch_network
       
@@ -43,8 +46,9 @@ services:
     ports:
       - '8003:8123'
       - '9003:9000'
-    volumes:
-      - ${storage_path}/clickhouse_node_04:/etc/clickhouse-server/config.d
+    environment:
+      - CLICKHOUSE_USER=admin
+      - CLICKHOUSE_PASSWORD=node4
     networks:
       - ch_network
 
