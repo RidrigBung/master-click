@@ -1,0 +1,31 @@
+<clickhouse>
+    <listen_host>::</listen_host>
+    <listen_host>0.0.0.0</listen_host>
+    <listen_try>1</listen_try>
+    <remote_servers>
+        <cluster>
+            <shard>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>clickhouse_node_01</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>clickhouse_node_02</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+            <shard>
+                <internal_replication>true</internal_replication>
+                <replica>
+                    <host>clickhouse_node_03</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>clickhouse_node_04</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </cluster>
+    </remote_servers>
+</clickhouse>
